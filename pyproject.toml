@@ -6,5 +6,8 @@ readme = "README.md"
 requires-python = ">=3.12"
 dependencies = [
     "fastapi",
-    "uvicorn"
+    "uvicorn",
+    "pypdf2",
+    "python-docx",
+    "chromadb"
 ]
