@@ -1,10 +1,10 @@
 .PHONY: run test lint
 
 run:
-	uvicorn src.main:app --reload
+	uv run uvicorn src.main:app --reload
 
 test:
-	pytest
+	uv run pytest
 
 lint:
-	ruff src tests
+	uv run ruff src tests

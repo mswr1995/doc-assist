@@ -1,10 +1,10 @@
 from typing import List
 import io
 try:
-    import PyPDF2
+    from pypdf import PdfReader  # Changed from PyPDF2
     from docx import Document
 except ImportError:
-    PyPDF2 = None
+    PdfReader = None  # Changed from PyPDF2
     Document = None
 
 
@@ -63,18 +63,18 @@ def extract_text_from_bytes(content: bytes, file_extension: str) -> str:
                 return content.decode('utf-8', errors = 'ignore')
             
     elif file_extension == '.pdf':
-        if PyPDF2 is None:
-            raise ImportError("PyPDF2 is required for pdf support. install with uv add pypdf2")
+        if PdfReader is None:  # Changed from PyPDF2
+            raise ImportError("pypdf is required for PDF support. Install with: uv add pypdf")
         
         try:
             pdf_file = io.BytesIO(content)
-            pdf_reader = PyPDF2.PdfReader(pdf_file)
+            pdf_reader = PdfReader(pdf_file)  # Changed from PyPDF2.PdfReader
             text = ""
             for page in pdf_reader.pages:
                 text += page.extract_text() + "\n"
             return text
         except Exception as e:
-            raise ValueError(f"FAiled to extract text from PDF: {str(e)}")
+            raise ValueError(f"Failed to extract text from PDF: {str(e)}")
         
     elif file_extension == '.docx':
         if Document is None:
