@@ -44,7 +44,7 @@ docker run -p 8000:8000 docassist
 - [x] Project setup and structure
 - [x] Document utilities
 - [x] Containerization
-- [ ] Text processing
+- [x] Text processing
 - [ ] Vector store integration
 - [ ] LLM integration
 - [ ] API endpoints
