@@ -102,10 +102,12 @@ QUESTION: {query}
 
 INSTRUCTIONS:
 - Answer the question using ONLY the information provided in the context above
-- If you cannot answer based on the provided context, say "I cannot find this information in the provided documents"
-- Always cite your sources by mentioning the document name
+- If the information exists in the context, provide a clear and direct answer
+- If the information does NOT exist in the context, say "This information is not available in the provided documents"
+- Do not contradict yourself - stick to one clear answer
+- Cite your sources by mentioning the document name
 - Be precise and factual
-- Do not make up information not found in the context
+- Do not add explanations about what you cannot do if you can actually answer
 
 ANSWER:"""
         

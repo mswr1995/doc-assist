@@ -7,7 +7,7 @@ class DocumentUploadResponse(BaseModel):
     status: str
     filename: str
     message: str
-    num_chunks: str
+    num_chunks: int
     file_path: str
 
 
@@ -32,7 +32,7 @@ class DocumentListResponse(BaseModel):
     """Response for listing documents"""
     status: str
     documents: List[str]
-    file_Count: int
+    file_count: int
     vector_chunk_count: int
 
 

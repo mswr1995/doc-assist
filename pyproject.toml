@@ -11,5 +11,6 @@ dependencies = [
     "python-docx",
     "chromadb",
     "pytest",
-    "ollama"
+    "ollama",
+    "python-multipart"
 ]
