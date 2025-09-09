@@ -1,28 +1,43 @@
-# use an official Python image as base
+# Use Python slim image
 FROM python:3.12-slim
 
-# set environment variables for python
-ENV PYTHONDONTWRITEBYTECODE=1
-ENV PYTHONUNBUFFERED=1
-
-# set the working dir inside the contrainer
+# Set working directory
 WORKDIR /app
 
-# copy only the dependency file first for better caching
-COPY pyproject.toml ./
+# Install system dependencies
+RUN apt-get update && apt-get install -y \
+    curl \
+    && rm -rf /var/lib/apt/lists/*
 
-# install uv
+# Install UV package manager
 RUN pip install uv
 
-# installl dependencies usng uv and pyproject.toml
-RUN uv pip install --system --deps develop
+# Copy dependency files
+COPY pyproject.toml uv.lock* ./
 
-# copy source code and other files
-COPY src/ ./src
-COPY tests/ ./tests
+# Install dependencies
+RUN uv sync --no-dev
 
-# expose the port FASTAPI will use
+# Copy source code
+COPY src/ ./src/
+
+# Create directories for data and vector DB
+RUN mkdir -p /app/data /app/chroma_db
+
+# Set environment variables with defaults
+ENV PYTHONPATH=/app
+ENV UPLOAD_DIR=/app/data
+ENV VECTOR_DB_PATH=/app/chroma_db
+ENV API_HOST=0.0.0.0
+ENV API_PORT=8000
+ENV API_RELOAD=false
+
+# Expose port
 EXPOSE 8000
 
-# default command to run the app
-CMD ["uvicorn", "src.main:app", "--host", "0.0.0.0", "--port", "8000"]
+# Health check
+HEALTHCHECK --interval=30s --timeout=10s --start-period=5s --retries=3 \
+  CMD curl -f http://localhost:8000/api/v1/health || exit 1
+
+# Run the application
+CMD ["uv", "run", "uvicorn", "src.main:app", "--host", "0.0.0.0", "--port", "8000"]
