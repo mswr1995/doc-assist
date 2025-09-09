@@ -1,12 +1,12 @@
 import os
 from typing import List
+from src.config import config
 
-DATA_DIR = os.path.join(os.path.dirname(__file__), "../../data")
-DATA_DIR = os.path.abspath(DATA_DIR)
+DATA_DIR = str(config.UPLOAD_DIR) # use config instead of hardcoded path
 
 def ensure_data_dir():
     """create the data dir if it doesnt exist"""
-    os.makedirs(DATA_DIR, exist_ok = True)
+    config.UPLOAD_DIR.mkdir(parents=True, exist_ok=True) # use config method
 
 def save_document(filename: str, content: bytes) -> str:
     """

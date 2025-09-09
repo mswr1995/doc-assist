@@ -1,5 +1,7 @@
 from typing import List
 import io
+from src.config import config
+
 try:
     from pypdf import PdfReader  # Changed from PyPDF2
     from docx import Document
@@ -8,18 +10,22 @@ except ImportError:
     Document = None
 
 
-def chunk_text(text: str, chunk_size: int = 1000, overlap: int = 200) -> List[str]:
+def chunk_text(text: str, chunk_size: int = None, overlap: int = None) -> List[str]:
     """
     Split text into overlapping chunks.
 
     Args:
         text: The text to chunk
-        chunk_size: maximum characters per chunk
-        overlap: characters to overlap between chunks
+        chunk_size: maximum characters per chunk (uses config default if None)
+        overlap: characters to overlap between chunks (uses config default if None)
 
     Returns:
         List of text chunks 
     """
+    # use config defaults if not provided
+    chunk_size = chunk_size or config.CHUNK_SIZE
+    overlap = overlap or config.CHUNK_OVERLAP
+    
     if len(text) <= chunk_size:
         return [text]
     

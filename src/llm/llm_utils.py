@@ -1,6 +1,7 @@
 from typing import Dict, List, Optional
 import ollama
 from dataclasses import dataclass
+from src.config import config
 
 
 @dataclass
@@ -19,17 +20,17 @@ class OllamaClient:
     Handles connection, prompt formatting, and response parsing.
     """
 
-    def __init__(self, model_name: str = "llama3.2:1b", base_url: str = "http://localhost:11434"):
+    def __init__(self, model_name: str = None, base_url: str = None):
         """
         Initialize Ollama client.
         
         Args:
-            model_name: Name of the Ollama model to use
-            base_url: Ollama server URL
+            model_name: Name of the Ollama model to use (uses config default if None)
+            base_url: Ollama server URL (uses config default if None)
         """
-        self.model_name = model_name
-        self.base_url = base_url
-        self.client = ollama.Client(host=base_url)
+        self.model_name = model_name or config.OLLAMA_MODEL
+        self.base_url = base_url or config.OLLAMA_BASE_URL
+        self.client = ollama.Client(host=self.base_url)
 
     def test_connection(self) -> bool:
         """
@@ -132,9 +133,9 @@ ANSWER:"""
                 prompt=prompt,
                 stream=False,
                 options={
-                    "temperature": 0.1,
-                    "top_p": 0.9,
-                    "num_predict": 500
+                    "temperature": config.LLM_TEMPERATURE,
+                    "top_p": config.LLM_TOP_P,
+                    "num_predict": config.LLM_MAX_TOKENS
                 }
             )
             

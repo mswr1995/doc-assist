@@ -4,7 +4,11 @@ from fastapi.responses import RedirectResponse
 import uvicorn
 
 from src.api.routes import router
+from src.config import config
 
+
+# create directories on startup
+config.create_directories()
 
 # create FastApi application
 app = FastAPI(
@@ -18,7 +22,7 @@ app = FastAPI(
 # Add CORS middleware for web frontend support
 app.add_middleware(
     CORSMiddleware,
-    allow_origins = ["*"], # configure appropriately for production
+    allow_origins = config.CORS_ORIGINS, # use config instead of hardcoded
     allow_credentials = True,
     allow_methods = ["*"],
     allow_headers = ["*"],
@@ -39,6 +43,7 @@ async def api_info():
         "name": "DocAssist API",
         "version": "0.1.0",
         "description": "Intelligent document assistant with RAG capabilities",
+        "configuration": config.get_display_config(), # add config display
         "endpoints": {
             "health": "/api/v1/health",
             "upload": "/api/v1/documents/upload",
@@ -52,9 +57,9 @@ def main():
     """Run the FastAPI application"""
     uvicorn.run(
         "src.main:app",
-        host = "0.0.0.0",
-        port = 8000,
-        reload = True, # auto reload on code change
+        host = config.API_HOST, # use config
+        port = config.API_PORT, # use config
+        reload = config.API_RELOAD, # use config
         log_level = "info"
     )
 

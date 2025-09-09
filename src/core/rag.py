@@ -1,6 +1,7 @@
 from typing import Dict, List, Optional
 from src.core.document_processor import DocumentProcessor
 from src.llm.llm_utils import OllamaClient
+from src.config import config
 
 
 class RAGEngine:
@@ -15,16 +16,18 @@ class RAGEngine:
 
     def __init__(
             self,
-            vector_db_path: str = "./chroma_db",
-            model_name: str = "llama3.2:1b",
-            max_chunks: int = 5
+            vector_db_path: str = None,
+            model_name: str = None,
+            max_chunks: int = None
     ):
         """
-        Verify that both document processor and LLM are working.
-
-        Raises:
-            RuntimeError: if connection fail
+        Initialize RAG engine with config defaults.
         """
+        # use config defaults if not provided
+        vector_db_path = vector_db_path or config.VECTOR_DB_PATH
+        model_name = model_name or config.OLLAMA_MODEL
+        max_chunks = max_chunks or config.MAX_CHUNKS
+        
         # initialize our two main components
         self.document_processor = DocumentProcessor(vector_db_path = vector_db_path)
         self.llm_client = OllamaClient(model_name = model_name)
@@ -78,6 +81,7 @@ class RAGEngine:
                     "question": question,
                     "answer": "Failed to search documents.",
                     "sources": [],
+                    "success": False,
                     "error": search_results.get("error", "Unknown search error"),
                     "chunks_found": 0
                 }
