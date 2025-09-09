@@ -10,5 +10,6 @@ dependencies = [
     "pypdf",
     "python-docx",
     "chromadb",
-    "pytest"
+    "pytest",
+    "ollama"
 ]
